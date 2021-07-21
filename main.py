@@ -1,10 +1,9 @@
 from threading import Thread
-from time import sleep
 import random
-from ui import Window
+from ui import window
 from data import sentences
+from client import Client
 
-window = Window()
 run = True
 last_count = 0
 
@@ -31,12 +30,20 @@ def check():
 def end():
     global run
     run = False
+    client.end()
     window.destroy()
 
 
 if __name__ == "__main__":
-    thread = Thread(target=check)
-    thread.setDaemon(True)
-    thread.start()
+    check_thread = Thread(target=check)
+    check_thread.setDaemon(True)
+    check_thread.start()
+    client = Client(window)
+    send_thread = Thread(target=client.send)
+    send_thread.setDaemon(True)
+    send_thread.start()
+    receive_thread = Thread(target=client.receive)
+    receive_thread.setDaemon(True)
+    receive_thread.start()
     window.protocol("WM_DELETE_WINDOW", end)
     window.mainloop()
