@@ -1,6 +1,6 @@
 import socket
+import threading
 from threading import Thread
-from time import sleep
 
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -10,31 +10,30 @@ server.listen(10)
 clients = []
 
 
-def accept():
-    current_client, _ = server.accept()
-    print(current_client)
-    if current_client not in clients:
-        clients.append(current_client)
-    receive_thread = Thread(target=receive, args=(current_client,))
-    receive_thread.setDaemon(True)
-    receive_thread.start()
-
-
 def receive(current_client):
     while True:
-        data = current_client.recv(1024).decode("utf-8")
-        #print("receive: " + data[0 : data.index("}") + 1])
-        for client in clients:
-            if client != current_client:
-                #print("send: " + data)
-                client.sendall(bytes(data, "utf-8"))
-                sleep(0.5)
+        try:
+            data = current_client.recv(1024).decode("utf-8")
+            # print("receive: " + data[0 : data.index("}") + 1])
+            for client in clients:
+                if client != current_client:
+                    # print("send: " + data)
+                    client.sendall(bytes(data, "utf-8"))
+        except Exception as e:
+            current_client.shutdown(2)
+            current_client.close()
+            clients.remove(current_client)
+            for client in clients:
+                if client != current_client:
+                    client.sendall(bytes("down", "utf-8"))
+            print(f"{current_client}: Connection close because {e}.")
+            exit()
 
 
 while True:
-    #print(threading.active_count())
+    print(threading.active_count())
     current_client, _ = server.accept()
-    #print(current_client)
+    print(f"{current_client}: Connected.")
     if current_client not in clients:
         clients.append(current_client)
     receive_thread = Thread(target=receive, args=(current_client,))

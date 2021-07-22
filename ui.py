@@ -35,7 +35,7 @@ class MultiWindow(tk.Tk):
         self.title("Typing")
         self.geometry("1300x600")
 
-        # self
+        # yourself
         self.sentence = tk.StringVar()
         self.sentence.set(random.choice(sentences))
         self.self_input_var = tk.StringVar()
@@ -46,7 +46,10 @@ class MultiWindow(tk.Tk):
         self.text_label.grid(column=0, row=0)
 
         self.self_input = tk.Entry(
-            self, textvariable=self.self_input_var, font=self.font, width=60
+            self,
+            textvariable=self.self_input_var,
+            font=self.font,
+            width=60,
         )
         self.self_input.grid(column=0, row=1)
 
@@ -55,18 +58,22 @@ class MultiWindow(tk.Tk):
 
         # other guy
         self.sentence_other = tk.StringVar()
-        self.sentence_other.set(random.choice(sentences))
         self.other_input_var = tk.StringVar()
         self.word_count_other = tk.StringVar()
-        self.word_count_other.set("0")
 
         self.text_label_other = tk.Label(
-            self, textvariable=self.sentence_other, font=self.font
+            self,
+            textvariable=self.sentence_other,
+            font=self.font,
         )
         self.text_label_other.grid(column=1, row=0)
 
         self.other_input = tk.Entry(
-            self, textvariable=self.other_input_var, font=self.font, width=60
+            self,
+            textvariable=self.other_input_var,
+            state='disabled',
+            font=self.font,
+            width=60,
         )
         self.other_input.grid(column=1, row=1)
 

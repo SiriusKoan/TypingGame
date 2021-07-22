@@ -19,22 +19,25 @@ class Client:
             )
             self.client.sendall(bytes(json_string, "utf-8"))
             # print("send: " + json_string)
-            sleep(0.2)
+            sleep(0.3)
 
     def receive(self):
+        self.window.sentence_other.set("No connection now.")
         while True:
-            data = self.client.recv(1024)
-            if data:
-                data = data.decode("utf-8")
+            data = self.client.recv(1024).decode("utf-8")
+            if data != "down":
+                data = data[: data.index("}") + 1]
                 # print("receive: " + data[0 : data.index("}") + 1])
                 try:
-                    json_string = json.loads(data[: data.index("}") + 1])
+                    json_string = json.loads(data)
                     self.window.sentence_other.set(json_string["sentence"])
                     self.window.other_input_var.set(json_string["input"])
                     self.window.word_count_other.set(json_string["count"])
                 except Exception as e:
                     print(e)
-            sleep(0.2)
+            else:
+                self.window.sentence_other.set("No connection now.")
+            sleep(0.3)
 
     def end(self):
         self.client.close()

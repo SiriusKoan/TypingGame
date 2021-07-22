@@ -1,6 +1,6 @@
 from threading import Thread
 import random
-from ui import window
+from ui import window, MultiWindow
 from data import sentences
 from client import Client
 
@@ -30,20 +30,22 @@ def check():
 def end():
     global run
     run = False
-    client.end()
+    if isinstance(window, MultiWindow):
+        client.end()
     window.destroy()
 
 
 if __name__ == "__main__":
-    check_thread = Thread(target=check)
-    check_thread.setDaemon(True)
-    check_thread.start()
-    client = Client(window)
-    send_thread = Thread(target=client.send)
-    send_thread.setDaemon(True)
-    send_thread.start()
-    receive_thread = Thread(target=client.receive)
-    receive_thread.setDaemon(True)
-    receive_thread.start()
+    if isinstance(window, MultiWindow):
+        check_thread = Thread(target=check)
+        check_thread.setDaemon(True)
+        check_thread.start()
+        client = Client(window)
+        send_thread = Thread(target=client.send)
+        send_thread.setDaemon(True)
+        send_thread.start()
+        receive_thread = Thread(target=client.receive)
+        receive_thread.setDaemon(True)
+        receive_thread.start()
     window.protocol("WM_DELETE_WINDOW", end)
     window.mainloop()
