@@ -18,15 +18,15 @@ class Client:
                 {"input": input, "sentence": sentence, "count": count}
             )
             self.client.sendall(bytes(json_string, "utf-8"))
-            # print("send: "+json_string)
-            sleep(0.1)
+            # print("send: " + json_string)
+            sleep(0.2)
 
     def receive(self):
         while True:
             data = self.client.recv(1024)
             if data:
                 data = data.decode("utf-8")
-                print("receive: " + data[0 : data.index("}") + 1])
+                # print("receive: " + data[0 : data.index("}") + 1])
                 try:
                     json_string = json.loads(data[: data.index("}") + 1])
                     self.window.sentence_other.set(json_string["sentence"])
@@ -34,7 +34,7 @@ class Client:
                     self.window.word_count_other.set(json_string["count"])
                 except Exception as e:
                     print(e)
-            sleep(0.1)
+            sleep(0.2)
 
     def end(self):
         self.client.close()

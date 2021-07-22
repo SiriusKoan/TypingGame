@@ -23,24 +23,20 @@ def accept():
 def receive(current_client):
     while True:
         data = current_client.recv(1024).decode("utf-8")
-        print("receive: " + data[0 : data.index("}") + 1])
+        #print("receive: " + data[0 : data.index("}") + 1])
         for client in clients:
             if client != current_client:
-                send_thread = Thread(
-                    target=send, args=(client, data[0 : data.index("}") + 1])
-                )
-                send_thread.setDaemon(True)
-                send_thread.start()
-
-
-def send(client, data):
-    while True:
-        print("send: " + data)
-        client.sendall(bytes(data, "utf-8"))
-        sleep(0.5)
+                #print("send: " + data)
+                client.sendall(bytes(data, "utf-8"))
+                sleep(0.5)
 
 
 while True:
-    accept_thread = Thread(target=accept)
-    accept_thread.setDaemon(True)
-    accept_thread.start()
+    #print(threading.active_count())
+    current_client, _ = server.accept()
+    #print(current_client)
+    if current_client not in clients:
+        clients.append(current_client)
+    receive_thread = Thread(target=receive, args=(current_client,))
+    receive_thread.setDaemon(True)
+    receive_thread.start()
