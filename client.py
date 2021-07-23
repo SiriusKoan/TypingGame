@@ -4,10 +4,17 @@ import json
 
 
 class Client:
-    def __init__(self, window) -> None:
+    def __init__(self, window, room_id) -> None:
         self.client = socket.socket()
-        self.client.connect(("127.0.0.1", 8000))
+        self.connect()
         self.window = window
+        self.room_id = room_id
+
+    def connect(self):
+        self.client.connect(("127.0.0.1", 8000))
+
+    def send_room_id(self):
+        self.client.sendall(bytes(json.dumps({"room_id": self.room_id}), "utf-8"))
 
     def send(self):
         while True:
@@ -15,9 +22,17 @@ class Client:
             sentence = self.window.sentence.get()
             count = self.window.word_count.get()
             json_string = json.dumps(
-                {"input": input, "sentence": sentence, "count": count}
+                {
+                    "room_id": self.room_id,
+                    "input": input,
+                    "sentence": sentence,
+                    "count": count,
+                }
             )
-            self.client.sendall(bytes(json_string, "utf-8"))
+            try:
+                self.client.sendall(bytes(json_string, "utf-8"))
+            except ConnectionResetError:
+                self.connect()
             # print("send: " + json_string)
             sleep(0.3)
 

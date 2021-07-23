@@ -9,11 +9,15 @@ class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
 
+        self.room_id = tk.StringVar()
+
         self.single_btn = tk.Button(
             self, text="Single Player", command=self.open_single_window
         )
         self.single_btn.pack()
 
+        self.room_id_entry = tk.Entry(self, textvariable=self.room_id)
+        self.room_id_entry.pack()
         self.multi_btn = tk.Button(
             self, text="Multiple Players", command=self.open_multi_window
         )
@@ -25,7 +29,7 @@ class MainWindow(tk.Tk):
 
     def open_multi_window(self):
         game_window = MultiWindow(self)
-        multi_setup(game_window)
+        multi_setup(game_window, self.room_id.get())
 
 
 class SingleWindow(tk.Toplevel):
