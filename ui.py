@@ -2,11 +2,35 @@ import tkinter as tk
 import tkinter.font as tkFont
 import random
 from data import sentences
+from utils import multi_setup, single_setup
 
 
-class SingleWindow(tk.Tk):
+class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
+
+        self.single_btn = tk.Button(
+            self, text="Single Player", command=self.open_single_window
+        )
+        self.single_btn.pack()
+
+        self.multi_btn = tk.Button(
+            self, text="Multiple Players", command=self.open_multi_window
+        )
+        self.multi_btn.pack()
+
+    def open_single_window(self):
+        game_window = SingleWindow(self)
+        single_setup(game_window)
+
+    def open_multi_window(self):
+        game_window = MultiWindow(self)
+        multi_setup(game_window)
+
+
+class SingleWindow(tk.Toplevel):
+    def __init__(self, root):
+        super().__init__(root)
         self.font = tkFont.Font(family="Lucida Grande", size=18)
         self.sentence = tk.StringVar()
         self.sentence.set(random.choice(sentences))
@@ -28,9 +52,9 @@ class SingleWindow(tk.Tk):
         self.count_label.pack()
 
 
-class MultiWindow(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class MultiWindow(tk.Toplevel):
+    def __init__(self, root):
+        super().__init__(root)
         self.font = tkFont.Font(family="Lucida Grande", size=16)
         self.title("Typing")
         self.geometry("1300x600")
@@ -71,7 +95,7 @@ class MultiWindow(tk.Tk):
         self.other_input = tk.Entry(
             self,
             textvariable=self.other_input_var,
-            state='disabled',
+            state="disabled",
             font=self.font,
             width=60,
         )
@@ -81,4 +105,4 @@ class MultiWindow(tk.Tk):
         self.count_label_other.grid(column=1, row=2)
 
 
-window = MultiWindow()
+window = MainWindow()
