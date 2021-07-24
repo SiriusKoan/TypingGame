@@ -13,11 +13,14 @@ rooms = dict()
 
 
 def shutdown_process(current_client):
-    current_client.shutdown(2)
     current_client.close()
-    for client in rooms[room_id]:
-        if client != current_client:
-            client.sendall(bytes("down", "utf-8"))
+    for room in rooms:
+        if current_client in rooms[room]:
+            room_id = room
+            for client in rooms[room_id]:
+                if client != current_client:
+                    client.sendall(bytes("down", "utf-8"))
+            break
 
 
 def receive(current_client):

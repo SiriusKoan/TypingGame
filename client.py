@@ -31,8 +31,8 @@ class Client:
             )
             try:
                 self.client.sendall(bytes(json_string, "utf-8"))
-            except ConnectionResetError:
-                self.connect()
+            except:
+                pass
             # print("send: " + json_string)
             sleep(0.3)
 
@@ -42,7 +42,7 @@ class Client:
             data = self.client.recv(1024).decode("utf-8")
             if data != "down":
                 data = data[: data.index("}") + 1]
-                # print("receive: " + data[0 : data.index("}") + 1])
+                # print("receive: " + data)
                 try:
                     json_string = json.loads(data)
                     self.window.sentence_other.set(json_string["sentence"])
