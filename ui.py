@@ -73,27 +73,27 @@ class MultiWindow(tk.Toplevel):
         # yourself
         self.sentence = tk.StringVar()
         self.sentence.set(random.choice(sentences))
-        self.self_input_var = tk.StringVar()
+        self.input_var = tk.StringVar()
         self.word_count = tk.StringVar()
         self.word_count.set("0")
 
         self.text_label = tk.Label(self, textvariable=self.sentence, font=self.font)
         self.text_label.grid(column=0, row=0)
 
-        self.self_input = tk.Entry(
+        self.input = tk.Entry(
             self,
-            textvariable=self.self_input_var,
+            textvariable=self.input_var,
             font=self.font,
             width=60,
         )
-        self.self_input.grid(column=0, row=1)
+        self.input.grid(column=0, row=1)
 
         self.count_label = tk.Label(self, textvariable=self.word_count)
         self.count_label.grid(column=0, row=2)
 
         # other guy
         self.sentence_other = tk.StringVar()
-        self.other_input_var = tk.StringVar()
+        self.input_var_other = tk.StringVar()
         self.word_count_other = tk.StringVar()
 
         self.text_label_other = tk.Label(
@@ -103,14 +103,14 @@ class MultiWindow(tk.Toplevel):
         )
         self.text_label_other.grid(column=1, row=0)
 
-        self.other_input = tk.Entry(
+        self.input_other = tk.Entry(
             self,
-            textvariable=self.other_input_var,
+            textvariable=self.input_var_other,
             state="disabled",
             font=self.font,
             width=60,
         )
-        self.other_input.grid(column=1, row=1)
+        self.input_other.grid(column=1, row=1)
 
         self.count_label_other = tk.Label(self, textvariable=self.word_count_other)
         self.count_label_other.grid(column=1, row=2)
