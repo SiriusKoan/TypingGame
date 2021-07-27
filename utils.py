@@ -14,18 +14,18 @@ def check(window):
     try:
         while True:
             sentence = window.text_label.cget("text").split()
-            now = window.self_input.get().split()
+            now = window.input.get().split()
             add = 0
             for word in now:
                 if word in sentence:
                     sentence.remove(word)
                     add += 1
-            window.word_count.set(str(last_count + add))
-            if window.self_input_var.get() == window.text_label.cget("text"):
+            window.word_count.set(last_count + add)
+            if window.input_var.get() == window.text_label.cget("text"):
                 sentence = random.choice(sentences)
                 window.sentence.set(sentence)
-                window.self_input_var.set("")
-                last_count = int(window.word_count.get())
+                window.input_var.set("")
+                last_count = window.word_count.get()
     except:
         exit()
 
